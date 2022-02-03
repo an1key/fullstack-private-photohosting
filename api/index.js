@@ -3,23 +3,23 @@ const path = require('path');
 const fs = require('fs'),
     http = require('http'),
     https = require('https'),
-    express = require('express');
+    express = require('express'),
+    passport = require('passport')
 var ocsp = require('ocsp')
 const port = 25565;
 const host = '127.0.0.1';
 const app = express();
-var public = path.join(__dirname,'public')
-const usersRoutes = require('./routes/users.js');
-const apiRoutes = require('./routes/api.js');
-app.use("/",express.static(public));
-app.use(bodyParser.json());
-app.use('/api', apiRoutes);
-app.get("/", function(req, res){
-    res.send("HELLOW!");
-});
 
 
+//app.use("/",express.static(public));
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.json())
+app.use(passport.initialize())
+require('./middleware/passport')(passport)
 
+
+const routes = require('./settings/routes')
+routes(app)
 
 var ocspCache = new ocsp.Cache()
 var options = {

@@ -10,10 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
     "ocsp": "^1.2.0",
-    "sqlite3": "^4.2.0",
-    "uuid": "8.3"
+    "passport": "^0.5.2",
+    "passport-jwt": "^4.0.0",
+    "sqlite3": "^4.2.0"
   }
 }

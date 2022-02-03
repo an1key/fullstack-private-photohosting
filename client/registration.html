@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Регистрация</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <h1>Введите данные</h1>
+    <form name="registerForm">
+        <label>email</label></br>
+        <input type="email" name="email" /></br></br>      
+        <label>nickname</label></br>
+        <input type="text" name="nickName" /></br></br>  
+        <label>password</label></br>
+        <input type="password" name="password" /></br></br>
+        <button type="submit" id="submit">Отправить</button>
+    </form>
+    <script>
+ 
+        document.getElementById("submit").addEventListener("click", function (e) {
+             e.preventDefault();
+            // получаем данные формы
+            let registerForm = document.forms["registerForm"];
+            let nickName = registerForm.elements["nickName"].value;
+            let password = registerForm.elements["password"].value;
+            let email = registerForm.elements["email"].value;
+            // сериализуем данные в json
+            let user = JSON.stringify({nickName: nickName, password: password, email: email});
+            let request = new XMLHttpRequest();
+            // посылаем запрос на адрес "/user"
+             request.open("POST", "/api/auth/signup", true);   
+             request.setRequestHeader("Content-Type", "application/json");
+             request.addEventListener("load", function () {
+                // получаем и парсим ответ сервера
+                alert(request.response)
+             });
+             request.send(user);
+         });
+    </script>
+</body>
+<html>

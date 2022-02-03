@@ -3,13 +3,13 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const response = require('./../response')
-const db = require('./../settings/db')
+const response = require('../response')
+const db = require('../settings/db')
 const config = require('./../config')
 
 exports.getAllUsers = (req, res) => {
 
-    db.query('SELECT `id`, `name`, `second_name`, `email` FROM `users`', (error, rows, fields) => {
+    db.all('SELECT `id`, `nickName`, `email` FROM `users`', (error, rows) => {
         if(error) {
             response.status(400, error, res)
         } else {
@@ -21,25 +21,24 @@ exports.getAllUsers = (req, res) => {
 
 exports.signup = (req, res) => {
 
-    db.query("SELECT `id`, `email`, `name` FROM `users` WHERE `email` = '" + req.body.email + "'", (error, rows, fields) => {
+    db.all("SELECT `id`, `email`, `nickName` FROM `users` WHERE `email` = '" + req.body.email + "'", (error, rows) => {
         if(error) {
             response.status(400, error, res)
         } else if(typeof rows !== 'undefined' && rows.length > 0) {
             const row = JSON.parse(JSON.stringify(rows))
             row.map(rw => {
-                response.status(302, {message: `Пользователь с таким email - ${rw.email} уже зарегстрирован!`}, res)
+                response.status(302, {message: `Пользователь с таким email - ${rw.email} уже зарегистрирован!`}, res)
                 return true
             })
         } else {
             const email = req.body.email
-            const name = req.body.name
-            const secondName = req.body.second_name !== '' ? req.body.second_name : 'Не указано'
+            const name = req.body.nickName
 
             const salt = bcrypt.genSaltSync(15)
             const password = bcrypt.hashSync(req.body.password, salt)
 
-            const sql = "INSERT INTO `users`(`name`, `second_name`, `email`, `password`) VALUES('" + name + "', '" + secondName + "', '" + email + "', '" + password + "')";
-            db.query(sql, (error, results) => {
+            const sql = "INSERT INTO `users`(`nickName`, `email`, `password`) VALUES('" + name + "', '" + email + "', '" + password + "')";
+            db.run(sql, (error, results) => {
                 if(error) {
                     response.status(400, error, res)
                 } else {
@@ -54,7 +53,7 @@ exports.signup = (req, res) => {
 
 exports.signin = (req, res) => {
 
-    db.query("SELECT `id`, `email`, `password` FROM `users` WHERE `email` = '" + req.body.email + "'", (error, rows, fields) => {
+    db.all("SELECT `id`, `email`, `password` FROM `users` WHERE `email` = '" + req.body.email + "'", (error, rows, fields) => {
         if(error) {
             response.status(400, error, res)
         } else if(rows.length <= 0) {
@@ -68,13 +67,13 @@ exports.signin = (req, res) => {
                     const token = jwt.sign({
                         userId: rw.id,
                         email: rw.email
-                    }, config.jwt, { expiresIn: 120 * 120 })
+                    }, config.jwt, { expiresIn: '1h' })
 
-                    response.status(200, {token: `Bearer ${token}`}, res)
+                    response.status(200, {message: `Успешная авторизация`,token: `Bearer ${token}`}, res)
 
                 } else {
                     //Выкидываем ошибку что пароль не верный
-                    response.status(401, {message: `Пароль не верный.`}, res)
+                    response.status(401, {message: `Неправильный пароль. Повторите попытку`}, res)
 
                 }
                 return true

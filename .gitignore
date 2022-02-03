@@ -1,3 +1,4 @@
 simple-node-rest-api-master
 api/node_modules
 api/config.js
+Database/*
