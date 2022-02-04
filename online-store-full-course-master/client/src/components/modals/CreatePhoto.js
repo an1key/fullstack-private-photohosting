@@ -142,4 +142,4 @@ const CreateDevice = observer(({show, onHide}) => {
     );
 });
 
-export default CreateDevice;
+export default CreatePhoto;

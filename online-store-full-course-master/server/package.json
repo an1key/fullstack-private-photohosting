@@ -7,18 +7,22 @@
     "dev": "nodemon index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "an1key",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
+    "date-and-time": "^2.1.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "jsonwebtoken": "^8.5.1",
+    "md5": "^2.3.0",
+    "ocsp": "^1.2.0",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.4.0",
+    "sqlite3": "^5.0.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
