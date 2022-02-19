@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, Container} from "react-bootstrap";
 import CreateBrand from "../components/modals/CreateBrand";
-import CreateDevice from "../components/modals/CreateDevice";
+import CreateDevice from "../components/modals/CreatePhoto";
 import CreateType from "../components/modals/CreateType";
 
 const Admin = () => {

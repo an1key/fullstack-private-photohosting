@@ -10,11 +10,15 @@ const User = sequelize.define('user', {
     role: {type: DataTypes.STRING, defaultValue: "GUEST"},
 })
 
-const Photo = sequelize.define('device', {
+const Photo = sequelize.define('photos', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    createdAt: {type: DataTypes.STRING, allowNull: false},
+    createdAtDate: {type: DataTypes.STRING, allowNull: false},
     createdById: {type: DataTypes.INTEGER},
-    img: {type: DataTypes.STRING, unique:true, allowNull: false},
+    hash: {type: DataTypes.STRING, unique:true, allowNull: false},
+    ext: {type: DataTypes.STRING, allowNull: false},
+    name: {type: DataTypes.STRING}
+}, {
+    timestamps: false
 })
 
 
