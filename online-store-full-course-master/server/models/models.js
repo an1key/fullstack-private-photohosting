@@ -23,8 +23,7 @@ const Photo = sequelize.define('photos', {
 
 
 
-User.hasOne(Photo)
-Photo.belongsTo(User)
+
 
 
 module.exports = {

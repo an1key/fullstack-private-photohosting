@@ -14,7 +14,7 @@ const generateJwt = (id, email, nick, role) => {
 
 class UserController {
     async registration(req, res, next) {
-        const {email, nick, password, role, comment} = req.body
+        const {email, nick, password, comment} = req.body
         if (!email || !password || !nick) {
             return next(ApiError.badRequest('Некорректный email, имя или пароль'))
         }
@@ -23,8 +23,8 @@ class UserController {
             return next(ApiError.badRequest('Пользователь с таким email уже существует'))
         }
         const hashPassword = await bcrypt.hash(password, 5)
-        const user = await User.create({nick, email, role, password: hashPassword, comment})
-        const token = generateJwt(user.id, user.email, user.role)
+        const user = await User.create({nick: nick, email: email, password: hashPassword, comment: comment})
+        const token = generateJwt(user.id, user.email, user.nick, user.role)
         return res.json({token})
     }
 
@@ -45,6 +45,16 @@ class UserController {
     async check(req, res, next) {
         const token = generateJwt(req.user.id, req.user.email, user.nick, req.user.role)
         return res.json({token})
+    }
+
+    async modify(req, res, next){
+        const userEmail = req.body.email;
+        const targetRole = req.body.role;
+        if( !userEmail || !targetRole) return next(ApiError.badRequest('Неправильно указаны параметры'));
+        const user = await User.findOne({where: {email : userEmail}});
+        if(!user) return next(ApiError.badRequest('Такого пользователя не существует'));
+        await user.update({role: targetRole})
+        return res.json(`modified user with email "${userEmail}". New role is "${user.role}"`)
     }
 }
 
