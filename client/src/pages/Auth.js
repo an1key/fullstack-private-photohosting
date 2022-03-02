@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import {NavLink, useLocation, useHistory} from "react-router-dom";
-import {LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "../utils/consts";
+import {LOGIN_ROUTE, REGISTRATION_ROUTE, CATALOGUE_ROUTE} from "../utils/consts";
 import {login, registration} from "../http/userAPI";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
@@ -16,6 +16,8 @@ const Auth = observer(() => {
     const isLogin = location.pathname === LOGIN_ROUTE
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [nick, setNick] = useState('')
+    const [comment, setComment] = useState('')
 
     const click = async () => {
         try {
@@ -23,11 +25,11 @@ const Auth = observer(() => {
             if (isLogin) {
                 data = await login(email, password);
             } else {
-                data = await registration(email, password);
+                data = await registration(email, nick, comment, password);
             }
             user.setUser(user)
             user.setIsAuth(true)
-            history.push(SHOP_ROUTE)
+            history.push(CATALOGUE_ROUTE)
         } catch (e) {
             alert(e.response.data.message)
         }
@@ -47,6 +49,7 @@ const Auth = observer(() => {
                         placeholder="Введите ваш email..."
                         value={email}
                         onChange={e => setEmail(e.target.value)}
+                        type="email"
                     />
                     <Form.Control
                         className="mt-3"
@@ -55,6 +58,27 @@ const Auth = observer(() => {
                         onChange={e => setPassword(e.target.value)}
                         type="password"
                     />
+                    {!isLogin ? 
+                    
+                        <Form.Control
+                        className="mt-3"
+                        placeholder="Введите никнейм..."
+                        value={nick}
+                        onChange={e => setNick(e.target.value)}
+                        />
+                        :
+                        <Row></Row>
+                    }
+                    {
+                        !isLogin ?
+                        <Form.Control
+                        className="mt-3"
+                        placeholder="Комментарий для администратора"
+                        value={comment}
+                        onChange={e => setComment(e.target.value)}
+                        />:
+                        <Row></Row>
+                    }
                     <Row className="d-flex justify-content-between mt-3 pl-3 pr-3">
                         {isLogin ?
                             <div>

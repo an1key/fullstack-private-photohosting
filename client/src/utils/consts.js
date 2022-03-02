@@ -1,6 +1,7 @@
-export const ADMIN_ROUTE = '/admin'
-export const LOGIN_ROUTE = '/login'
-export const REGISTRATION_ROUTE = '/registration'
-export const SHOP_ROUTE = '/'
-export const BASKET_ROUTE = '/basket'
-export const DEVICE_ROUTE = '/device'
+export const ADMIN_ROUTE = '/api/admin/users'
+export const ADD_PHOTO_ROUTE = '/api/admin/photos'
+export const LOGIN_ROUTE = '/api/user/login'
+export const REGISTRATION_ROUTE = '/api/user/registration'
+export const CATALOGUE_ROUTE = '/api/photos'
+export const PHOTO_ROUTE = '/api/photos' //????
+export const MAIN_ROUTE = '/'

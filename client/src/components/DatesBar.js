@@ -3,24 +3,23 @@ import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 import {Card, Row} from "react-bootstrap";
 
-const BrandBar = observer(() => {
-    const {device} = useContext(Context)
+const DatesBar = observer(() => {
+    const {photo} = useContext(Context)
 
     return (
         <Row className="d-flex">
-            {device.brands.map(brand =>
+            {photo.dates.map(date =>
                 <Card
                     style={{cursor:'pointer'}}
-                    key={brand.id}
+                    key={date.id}
                     className="p-3"
-                    onClick={() => device.setSelectedBrand(brand)}
-                    border={brand.id === device.selectedBrand.id ? 'danger' : 'light'}
+                    onClick={() => photo.setSelectedDate(date)}
+                    border={date.id === photo.selectedDate.id ? 'danger' : 'light'}
                 >
-                    {brand.name}
                 </Card>
             )}
         </Row>
     );
 });
 
-export default BrandBar;
+export default DatesBar;

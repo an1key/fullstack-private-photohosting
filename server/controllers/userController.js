@@ -43,7 +43,7 @@ class UserController {
     }
 
     async check(req, res, next) {
-        const token = generateJwt(req.user.id, req.user.email, user.nick, req.user.role)
+        const token = generateJwt(req.user.id, req.user.email, req.user.nick, req.user.role)
         return res.json({token})
     }
 
@@ -55,6 +55,12 @@ class UserController {
         if(!user) return next(ApiError.badRequest('Такого пользователя не существует'));
         await user.update({role: targetRole})
         return res.json(`modified user with email "${userEmail}". New role is "${user.role}"`)
+    }
+    async getAllUsers(req, res, next)
+    {
+        const users = await User.findAndCountAll({where:{
+        }});
+        return res.json(users);
     }
 }
 

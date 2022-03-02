@@ -19,7 +19,7 @@ const App = observer(() => {
     }, [])
 
     if (loading) {
-        return <Spinner animation={"grow"}/>
+        return <Spinner animation={"border"} variant="danger" className="justify-content-between align-items-center"/>
     }
 
     return (

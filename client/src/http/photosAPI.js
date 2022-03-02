@@ -2,7 +2,7 @@ import {$authHost, $host} from "./index";
 import jwt_decode from "jwt-decode";
 
 export const createPhoto = async (photo) => {
-    const {data} = await $authHost.post('api/photos', photo)
+    const {data} = await $authHost.post('api/admin/photos', photo)
     return data
 }
 

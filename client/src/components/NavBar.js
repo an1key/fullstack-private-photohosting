@@ -3,7 +3,7 @@ import {Context} from "../index";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {NavLink} from "react-router-dom";
-import {ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE} from "../utils/consts";
+import {ADMIN_ROUTE, ADD_PHOTO_ROUTE, LOGIN_ROUTE, CATALOGUE_ROUTE} from "../utils/consts";
 import {Button} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import Container from "react-bootstrap/Container";
@@ -20,12 +20,19 @@ const NavBar = observer(() => {
     return (
         <Navbar bg="dark" variant="dark">
             <Container>
-                <NavLink style={{color:'white'}} to={SHOP_ROUTE}>КупиДевайс</NavLink>
+                <NavLink style={{color:'white'}} to={CATALOGUE_ROUTE}>Приват хранилище</NavLink>
                 {user.isAuth ?
                     <Nav className="ml-auto" style={{color: 'white'}}>
                         <Button
                             variant={"outline-light"}
+                            onClick={() => history.push(ADD_PHOTO_ROUTE)}
+                        >
+                            Добавить фото
+                        </Button>
+                        <Button
+                            variant={"outline-light"}
                             onClick={() => history.push(ADMIN_ROUTE)}
+                            className="ml-2"
                         >
                             Админ панель
                         </Button>
