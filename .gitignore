@@ -2,8 +2,9 @@
 /client/node_modules
 /client/.pnp
 /client/.pnp.js
-
-
+/client/.env
+/client/README.md
+/client/.eslintcache
 /coverage
 
 /build
@@ -20,3 +21,5 @@
 
 /server/node_modules
 /server/static/*
+/server/.env
+lomik.js
