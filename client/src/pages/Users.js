@@ -8,19 +8,25 @@ import {fetchAllUsers} from "../http/userAPI";
 
 
 const Users = observer(() => {
-    const [users, setUsers] = useState(null);
+    const [users, setUsers] = useState();
     useEffect(() => {
-        fetchAllUsers(null, 1, 2).then(data => {
-            setUsers(data)
-            console.log(`data:\n ${data}`)
+        fetchAllUsers().then(data => {
+            setUsers(data.rows)
+            console.log(users)
         })
     }, [])
-    console.log(users);
     return (
         <Container className="d-flex flex-column">
-            {users.rows.map(row =>
-                <Row className="d-flex">`${row}`</Row>    
-            )}
+                <Row>
+                    <Col>id</Col>
+                    <Col>nick</Col>
+                    <Col>comment</Col>
+                    <Col>role</Col>
+                </Row>
+                <Row>{toString(users)}</Row>
+
+            )
+
             
 
         </Container>

@@ -6,7 +6,7 @@ const fs = require('fs');
 const {Photo} = require('../models/models')
 const ApiError = require('../error/ApiError');
 const ExifImage = require('exif').ExifImage;
-
+const sharp = require('sharp');
 
 
 
@@ -15,12 +15,16 @@ class PhotoController {
     async create(req, res, next) {
 
         try {
+
             console.log(req.body);
             console.log(req.files)
             const {img} = req.files;
             console.log(img.length);
+            console.log('============\n============\n============\n============\n')
+            console.log(img)
             var uploadErrors = 0;
-            if(img.length){
+            if(Array.isArray(img)){
+                console.log(true)
                 for await (var image of img){
 
                     console.log(image.name)
@@ -30,7 +34,8 @@ class PhotoController {
                         let hash = image.md5;
                         let ext = path.extname(image.name);
                         let name = image.name;
-                        let fileName = `${hash}.${ext}`
+                        let fileName = `${hash}${ext}`
+                        var size;
                         console.log(config.path_to_images);
                         const photo = await Photo.findOne({where:{hash}})
                         if(photo)
@@ -38,7 +43,7 @@ class PhotoController {
                             uploadErrors = uploadErrors + 1;
                             continue;
                         }
-                        image.mv(path.resolve(config.path_to_images, fileName), (error)=>
+                        image.mv(`${path.resolve(config.path_to_images, fileName)}`, (error)=>
                         {
                             if (error) return next(ApiError.badRequest(error.message));
                             console.log(config.path_to_images);
@@ -48,6 +53,13 @@ class PhotoController {
                                         let birthday = `${date.format(birthtime, 'DD/MM/YYYY')}`
                                         console.log(birthday); 
                                         try{
+                                            sharp(path.resolve(config.path_to_images, fileName))
+                                                .rotate()
+                                                .resize(500,500,{
+                                                    withMetadata: true,
+                                                    fit: "cover",
+                                                    jpegOptions: { force:true, quality:90 }
+                                                }).toFile(`${path.resolve(config.path_to_thumbs, fileName)}`)
                                             const photo = await Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
                                             console.log(photo);
                                         } catch (e){
@@ -61,6 +73,13 @@ class PhotoController {
                                         let birthday = `${date.format(data, 'DD/MM/YYYY')}`
                                         console.log(birthday);
                                         try{
+                                            sharp(path.resolve(config.path_to_images, fileName))
+                                                .rotate()
+                                                .resize(500,500,{
+                                                    withMetadata: true,
+                                                    fit: "cover",
+                                                    jpegOptions: { force:true, quality:90 }
+                                                }).toFile(`${path.resolve(config.path_to_thumbs, fileName)}`)
                                             const photo = await Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
                                             console.log(photo);
     
@@ -69,6 +88,7 @@ class PhotoController {
                                             next(ApiError.badRequest(e.message))
                                         }
                                     }
+
                                 });
                     })} catch (e) {
                         console.log(e);
@@ -76,8 +96,9 @@ class PhotoController {
                     }
                 }
                 await console.log(`Загружено ${img.length - uploadErrors} файлов из ${img.length}`);
-                await res.json(`Загружено ${img.length - uploadErrors} файлов из ${img.length}`);
+                await res.json({message:`Загружено ${img.length - uploadErrors} файлов из ${img.length}`,status:1111});
             }else {
+                console.log(false)
                 console.log(img.name)
                 try {
                     let {authorId} = req.body;
@@ -85,16 +106,17 @@ class PhotoController {
                     let hash = img.md5;
                     let ext = path.extname(img.name);
                     let name = img.name;
-                    let fileName = `${hash}.${ext}`
+                    let fileName = `${hash}${ext}`
+                    var size;
                     console.log(config.path_to_images);
                     const photo = await Photo.findOne({where:{hash}})
                     if(photo)
                     {
-                        uploadErrors = uploadErrors + 1;
-                        return res.json(`Загружено 0 файлов из 1`);
+                        return res.json({message:`Это фото уже было загружено ранее`,status:2222});
                     }
                     img.mv(path.resolve(config.path_to_images, fileName), (error)=>
                     {
+
                         if (error) return next(ApiError.badRequest(error.message));
                         console.log(config.path_to_images);
                             new ExifImage({ image : `${path.resolve(config.path_to_images, fileName)}` },async function (error, exifData) {
@@ -103,8 +125,24 @@ class PhotoController {
                                     let birthday = `${date.format(birthtime, 'DD/MM/YYYY')}`
                                     console.log(birthday); 
                                     try{
-                                        const photo = await Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
-                                        console.log(photo);
+                                            sharp(path.resolve(config.path_to_images, fileName))
+                                            .rotate()
+                                            .resize(500,500,{
+                                                withMetadata: true,
+                                                fit: "cover",
+                                                jpegOptions: { force:true, quality:90 }
+                                            }).toFile(path.resolve(config.path_to_thumbs, fileName))
+                                            .then(()=>{
+                                                const photo = Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
+                                                .then(()=>{
+                                                    console.log(photo);
+                                                    return res.json({message:'Фото успешно загружено', photo:photo,status:1111});
+                                                })
+
+                                            })
+
+                                            
+
                                     } catch (e){
                                         console.log(e)
                                         next(ApiError.badRequest(e.message))
@@ -115,15 +153,35 @@ class PhotoController {
                                     var data = date.parse(exifData.exif.DateTimeOriginal, 'YYYY:MM:DD HH:mm:ss')
                                     let birthday = `${date.format(data, 'DD/MM/YYYY')}`
                                     console.log(birthday);
-                                    try{
-                                        const photo = await Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
-                                        console.log(photo);
+                                    try{                                    
+                                        sharp(path.resolve(config.path_to_images, fileName))
+                                            .rotate()
+                                            .resize(500,500,{
+                                                withMetadata: true,
+                                                fit: "cover",
+                                                jpegOptions: { force:true, quality:90 }
+                                            }).toFile(path.resolve(config.path_to_thumbs, fileName))
+                                            .then(()=>{
+                                                const photo = Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
+                                                .then(()=> {
+                                                    console.log(photo);
+                                                    return res.json({message:'Фото успешно загружено', photo:photo,status:1111});
+                                                })
+
+                                            })
+
+                                            
+                                        
 
                                     } catch (e){
                                         console.log(e)
                                         next(ApiError.badRequest(e.message))
                                     }
                                 }
+
+                                
+
+
                             });
                 })} catch (e) {
                     console.log(e);

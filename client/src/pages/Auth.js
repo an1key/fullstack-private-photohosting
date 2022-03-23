@@ -31,6 +31,7 @@ const Auth = observer(() => {
             user.setIsAuth(true)
             history.push(CATALOGUE_ROUTE)
         } catch (e) {
+            console.log(e)
             alert(e.response.data.message)
         }
 

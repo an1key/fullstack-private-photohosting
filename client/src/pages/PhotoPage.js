@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, Col, Container, Image, Row} from "react-bootstrap";
+import {Alert, Button, Card, Col, Container, Image, Row} from "react-bootstrap";
 
 import {useParams} from 'react-router-dom'
 import {fetchOnePhoto} from "../http/photosAPI";
@@ -12,28 +12,24 @@ const PhotoPage = () => {
     }, [])
 
     return (
+
         <Container className="mt-3">
+            {photo ?
             <Row>
-                <Col md={4}>
-                    <Image width={300} height={300} src={process.env.REACT_APP_API_URL + photo.img}/>
-                </Col>
-                <Col md={4}>
-                    <Row className="d-flex flex-column align-items-center">
-                        <div
-                            className="d-flex align-items-center justify-content-center"
-                            style={{background: `url() no-repeat center center`, width:240, height: 240, backgroundSize: 'cover', fontSize:64}}
-                        >
-                        </div>
-                    </Row>
-                </Col>
-                <Col md={4}>
+                <Col md={8} xs={10}>
                     <Card
                         className="d-flex flex-column align-items-center justify-content-around"
-                        style={{width: 300, height: 300, fontSize: 32, border: '5px solid lightgray'}}
+                        style={{border: '5px solid lightgray'}}
                     >
+                        <Image style={{width:'100%'}} thumbnail={false} src={process.env.REACT_APP_API_URL + photo.hash + photo.ext}/>
                     </Card>
                 </Col>
             </Row>
+            : <Alert variant="warning">
+                Такого фото нет :(
+            </Alert>
+            }
+            
             
         </Container>
     );

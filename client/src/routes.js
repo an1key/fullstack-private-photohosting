@@ -21,7 +21,7 @@ export const authRoutes = [
     {
         path: PHOTO_ROUTE + '/:id',
         Component: PhotoPage
-    },
+    }
     
 ]
 

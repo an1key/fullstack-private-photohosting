@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
-import {Button, Dropdown, Form, Row, Col} from "react-bootstrap";
+import {Button, Dropdown, Form, Row, Col, Alert} from "react-bootstrap";
 import {Context} from "../../index";
 import {createPhoto, fetchPhotos} from "../../http/photosAPI";
 import {observer} from "mobx-react-lite";
@@ -8,12 +8,12 @@ import {observer} from "mobx-react-lite";
 const CreatePhoto = observer(({show, onHide}) => {
     const {photo} = useContext(Context)
     const [files, setFiles] = useState(null)
-
+    const [isLoading, setLoading] = useState(false);
 
     const selectFiles = e => {
         setFiles(e.target.files)
     }
-
+    var alert = null;
     const addPhoto = () => {
         var formData = new FormData;
         var img = [];
@@ -22,10 +22,37 @@ const CreatePhoto = observer(({show, onHide}) => {
             formData.append(`img`, files[i])
         }
         console.log(formData)
-        createPhoto(formData).then(data => onHide())
+        createPhoto(formData).then(data => {
+            console.log(data)
+            setLoading(false);
+            onHide();
+            if(data.status == 1111)
+            {
+                console.log('alert')
+                alert = (
+                    <Alert variant="success">
+                        {data.message}
+                        <Button onClick={() => onHide()} variant="outline-success">
+                            Close me y'all!
+                        </Button>
+                    </Alert>
+                )
+            }
+        });
     }
 
-    return (
+
+        
+      
+    useEffect(() => {
+        if (isLoading) {
+        addPhoto();
+        }
+    }, [isLoading]);
+      
+      const handleClick = () => setLoading(true);
+      
+      return (
         <Modal
             show={show}
             onHide={onHide}
@@ -43,6 +70,7 @@ const CreatePhoto = observer(({show, onHide}) => {
                         type="file"
                         multiple
                         onChange={selectFiles}
+                        accept=".jpg,.jpeg,.png"
                     />
                     <hr/>
                     
@@ -50,10 +78,13 @@ const CreatePhoto = observer(({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="outline-danger" onClick={onHide}>Закрыть</Button>
-                <Button variant="outline-success" onClick={addPhoto}>Добавить</Button>
+                <Button variant="outline-success" disabled={isLoading} onClick={!isLoading ? handleClick : null}>{isLoading ? 'Загрузка...' : 'Добавить'}</Button>
+                {alert}
             </Modal.Footer>
         </Modal>
     );
+
+    
 });
 
 export default CreatePhoto;

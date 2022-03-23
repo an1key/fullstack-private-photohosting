@@ -7,13 +7,13 @@ export const createPhoto = async (photo) => {
 }
 
 export const fetchPhotos = async (createdAt, page, limit= 5) => {
-    const {data} = await $host.get('api/photos', {params: {
+    const {data} = await $authHost.get('api/photos', {params: {
             createdAt, page, limit
         }})
     return data
 }
 
 export const fetchOnePhoto = async (id) => {
-    const {data} = await $host.get('api/photos/' + id)
+    const {data} = await $authHost.get('api/photos/' + id)
     return data
 }

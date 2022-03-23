@@ -7,7 +7,7 @@ export default class PhotosStore {
         this._selectedAuthor = {}
         this._page = 1
         this._totalCount = 0
-        this._limit = 3
+        this._limit = 5
         makeAutoObservable(this)
     }
 
@@ -26,9 +26,15 @@ export default class PhotosStore {
     }
     setPage(page) {
         this._page = page
+        window.scrollTo(0,0)
     }
     setTotalCount(count) {
         this._totalCount = count
+    }
+    setLimit(limit) {
+        this.setPage(1)
+        this._limit = limit
+        localStorage.limit = limit
     }
 
     get dates() {
@@ -53,6 +59,6 @@ export default class PhotosStore {
         return this._page
     }
     get limit() {
-        return this._limit
+        return localStorage.limit
     }
 }
