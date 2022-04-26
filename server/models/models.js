@@ -21,14 +21,20 @@ const Photo = sequelize.define('photos', {
     timestamps: false
 })
 
-
+const Date = sequelize.define('dates',{
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    createdAtDate: {type: DataTypes.STRING, allowNull: false, unique: true},
+}, {
+    timestamps: false
+})
 
 
 
 
 module.exports = {
     User,
-    Photo
+    Photo,
+    Date
 }
 
 

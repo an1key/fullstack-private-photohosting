@@ -3,7 +3,7 @@ const path = require('path');
 const config = require('../config');
 const date = require('date-and-time')
 const fs = require('fs');
-const {Photo} = require('../models/models')
+const {Photo, Date} = require('../models/models')
 const ApiError = require('../error/ApiError');
 const ExifImage = require('exif').ExifImage;
 const sharp = require('sharp');
@@ -61,6 +61,15 @@ class PhotoController {
                                                     jpegOptions: { force:true, quality:90 }
                                                 }).toFile(`${path.resolve(config.path_to_thumbs, fileName)}`)
                                             const photo = await Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
+                                            const date =  await Date.findOne({where:{createdAtDate : birthday}})
+                                            console.log(date)
+                                            if(date == null){
+                                                const date = await Date.create({createdAtDate: birthday}).then(()=>{
+                                                    console.log(date);
+                                                })
+                                            }
+
+
                                             console.log(photo);
                                         } catch (e){
                                             console.log(e)
@@ -81,6 +90,15 @@ class PhotoController {
                                                     jpegOptions: { force:true, quality:90 }
                                                 }).toFile(`${path.resolve(config.path_to_thumbs, fileName)}`)
                                             const photo = await Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
+                                            const date =  await Date.findOne({where:{createdAtDate : birthday}})
+                                            console.log(date)
+                                            if(date == null){
+                                                const date = await Date.create({createdAtDate: birthday}).then(()=>{
+                                                    console.log(date);
+                                                })
+                                            }
+
+
                                             console.log(photo);
     
                                         } catch (e){
@@ -135,6 +153,16 @@ class PhotoController {
                                             .then(()=>{
                                                 const photo = Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
                                                 .then(()=>{
+                                                    const date =  Date.findOne({where:{createdAtDate : birthday}}).then((date, err)=>{
+                                                        console.log(date)
+                                                        if(date == null){
+                                                            const date = Date.create({createdAtDate: birthday}).then(()=>{
+                                                                console.log(date);
+                                                            })
+                                                        }
+                                                    })
+                                                    
+            
                                                     console.log(photo);
                                                     return res.json({message:'Фото успешно загружено', photo:photo,status:1111});
                                                 })
@@ -164,6 +192,15 @@ class PhotoController {
                                             .then(()=>{
                                                 const photo = Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
                                                 .then(()=> {
+                                                    const date =  Date.findOne({where:{createdAtDate : birthday}}).then((date, err)=>{
+                                                        console.log(date)
+                                                        if(date == null){
+                                                            const date = Date.create({createdAtDate: birthday}).then(()=>{
+                                                                console.log(date);
+                                                            })
+                                                        }
+                                                    })
+        
                                                     console.log(photo);
                                                     return res.json({message:'Фото успешно загружено', photo:photo,status:1111});
                                                 })
@@ -199,6 +236,7 @@ class PhotoController {
 
     }
 
+    
     async getAll(req, res) {
         let {createdAt, limit, page} = req.query
         page = page || 1;
@@ -222,6 +260,11 @@ class PhotoController {
             },
         )
         return res.json(photo)
+    }
+    async getAllDates(req, res){
+        const dates = await Date.findAndCountAll({where:{
+        }});
+        return res.json(dates)
     }
 }
 

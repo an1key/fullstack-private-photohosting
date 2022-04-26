@@ -5,7 +5,7 @@ import NavBar from "./components/NavBar";
 import {observer} from "mobx-react-lite";
 import {Context} from "./index";
 import {check} from "./http/userAPI";
-import {Spinner} from "react-bootstrap";
+import {Container, Spinner} from "react-bootstrap";
 
 const App = observer(() => {
     const {user} = useContext(Context)
@@ -19,7 +19,13 @@ const App = observer(() => {
     }, [])
 
     if (loading) {
-        return <Spinner animation={"border"} variant="danger"/>
+        return (
+        
+            <Container className="d-flex justify-content-center align-items-center">
+                <Spinner animation={"border"} variant="success" height={'500%'}/>
+            </Container>
+        )
+
     }
 
     return (

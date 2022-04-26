@@ -3,11 +3,12 @@ import {makeAutoObservable} from "mobx";
 export default class PhotosStore {
     constructor() {
         this._photos = []
-        this._selectedDate = {}
+        this._selectedDate = null
         this._selectedAuthor = {}
         this._page = 1
         this._totalCount = 0
         this._limit = 5
+        this._dates = []
         makeAutoObservable(this)
     }
 
@@ -15,7 +16,9 @@ export default class PhotosStore {
     setPhotos(photos) {
         this._photos = photos
     }
-
+    setDates(dates) {
+        this._dates = dates;
+    }
     setSelectedDate(date) {
         this.setPage(1)
         this._selectedDate = date
@@ -38,7 +41,7 @@ export default class PhotosStore {
     }
 
     get dates() {
-        return this._photos
+        return this._dates
     }
     get authors() {
         return this._authors

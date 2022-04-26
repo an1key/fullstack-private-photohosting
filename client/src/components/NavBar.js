@@ -5,7 +5,7 @@ import Image from "react-bootstrap/Image";
 import Nav from "react-bootstrap/Nav";
 import {NavLink} from "react-router-dom";
 import {ADMIN_ROUTE, ADD_PHOTO_ROUTE, LOGIN_ROUTE, CATALOGUE_ROUTE} from "../utils/consts";
-import {Button} from "react-bootstrap";
+import {Button, NavDropdown} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import Container from "react-bootstrap/Container";
 import {useHistory} from 'react-router-dom'
@@ -25,12 +25,13 @@ const NavBar = observer(() => {
         var decoded = jwt_decode(localStorage.token);
     }
     return (
-        <Navbar bg="light" variant="dark">
+        <Navbar bg="light" variant="dark" sticky="top" expand={'lg'}>
             <Container>
-                <NavLink style={{color:'white'}} to={CATALOGUE_ROUTE}>
-                    <Image src={logo} height={60} md={4} sm={3} type="image/png" alt="In100gram">
+                <Navbar.Brand style={{color:'white'}} href="/api/photos">
+                    <Image src={logo} height={42} md={4} sm={3} type="image/png" alt="In100gram">
                     </Image>
-                </NavLink>
+                </Navbar.Brand>
+               
                 {user.isAuth ?
                     <Nav className="ml-auto" style={{color: 'white'}}>
                         {(["MODER", "ADMIN"].includes(decoded.role))
@@ -38,6 +39,7 @@ const NavBar = observer(() => {
                             <Button
                                 variant={"outline-dark"}
                                 onClick={() => setPhotoVisible(true)}
+                                className="mt-1"
                             >
                                 Добавить фото
                             </Button>
@@ -49,7 +51,7 @@ const NavBar = observer(() => {
                             <Button
                                 variant={"outline-dark"}
                                 onClick={() => history.push(ADMIN_ROUTE)}
-                                className="ml-2"
+                                className="ml-2 mt-1"
                             >
                                 Админ панель
                             </Button>
@@ -61,7 +63,7 @@ const NavBar = observer(() => {
                         <Button
                             variant={"outline-dark"}
                             onClick={() => logOut()}
-                            className="ml-2"
+                            className="ml-2 mt-1"
                         >
                             Выйти
                         </Button>

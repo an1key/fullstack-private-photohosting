@@ -31,6 +31,8 @@ const Pages = observer(() => {
                         type="radio"
                         variant={(radioValue === radio.value) ? "secondary" : "outline-secondary"}
                         name="radio"
+                        style={{cursor:"pointer"}}
+
                         value={radio.value}
                         checked={radioValue === radio.value}
                         onChange={(e) => {

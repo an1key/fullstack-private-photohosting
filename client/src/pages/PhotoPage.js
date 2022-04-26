@@ -15,14 +15,17 @@ const PhotoPage = () => {
 
         <Container className="mt-3">
             {photo ?
-            <Row>
+            <Row >
                 <Col md={8} xs={10}>
                     <Card
                         className="d-flex flex-column align-items-center justify-content-around"
-                        style={{border: '5px solid lightgray'}}
+                        style={{border: '5px solid lightgray','height':'100%'}}
                     >
-                        <Image style={{width:'100%'}} thumbnail={false} src={process.env.REACT_APP_API_URL + photo.hash + photo.ext}/>
+                        <Card.Img style={{'width':'100%','object-fit': 'cover'}} thumbnail={false} src={process.env.REACT_APP_API_URL + photo.hash + photo.ext}/>
                     </Card>
+                </Col>
+                <Col>
+                    usussuus
                 </Col>
             </Row>
             : <Alert variant="warning">
