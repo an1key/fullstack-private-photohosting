@@ -25,7 +25,7 @@ const PhotoPage = () => {
                     </Card>
                 </Col>
                 <Col>
-                    usussuus
+                    
                 </Col>
             </Row>
             : <Alert variant="warning">

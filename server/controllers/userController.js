@@ -48,13 +48,13 @@ class UserController {
     }
 
     async modify(req, res, next){
-        const userEmail = req.body.email;
+        const userId = req.body.id;
         const targetRole = req.body.role;
-        if( !userEmail || !targetRole) return next(ApiError.badRequest('Неправильно указаны параметры'));
-        const user = await User.findOne({where: {email : userEmail}});
+        if( !userId || !targetRole) return next(ApiError.badRequest('Неправильно указаны параметры'));
+        const user = await User.findOne({where: {id : userId}});
         if(!user) return next(ApiError.badRequest('Такого пользователя не существует'));
         await user.update({role: targetRole})
-        return res.json(`modified user with email "${userEmail}". New role is "${user.role}"`)
+        return res.json(`modified user with email "${userId}". New role is "${user.role}"`)
     }
     async getAllUsers(req, res, next)
     {

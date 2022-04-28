@@ -6,7 +6,6 @@ import PhotoItem from "./PhotoItem";
 
 const PhotoList = observer(() => {
     const {photo} = useContext(Context)
-
     return (
         <Row className="d-flex">
             {photo.photos.map(photo =>

@@ -50,7 +50,7 @@ class PhotoController {
                                 new ExifImage({ image : `${path.resolve(config.path_to_images, fileName)}` },async function (error, exifData) {
                                     if (error || !exifData.exif.DateTimeOriginal){
                                         let {birthtime} = fs.statSync(path.resolve(config.path_to_images, fileName));
-                                        let birthday = `${date.format(birthtime, 'DD/MM/YYYY')}`
+                                        let birthday = `${date.format(birthtime, 'DD.MM.YYYY')}`
                                         console.log(birthday); 
                                         try{
                                             sharp(path.resolve(config.path_to_images, fileName))
@@ -60,15 +60,17 @@ class PhotoController {
                                                     fit: "cover",
                                                     jpegOptions: { force:true, quality:90 }
                                                 }).toFile(`${path.resolve(config.path_to_thumbs, fileName)}`)
-                                            const photo = await Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
-                                            const date =  await Date.findOne({where:{createdAtDate : birthday}})
-                                            console.log(date)
-                                            if(date == null){
-                                                const date = await Date.create({createdAtDate: birthday}).then(()=>{
-                                                    console.log(date);
+                                                const photo = Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
+                                                .then(()=>{
+                                                    const date =  Date.findOne({where:{createdAtDate : birthday}}).then((date, err)=>{
+                                                        console.log(date)
+                                                        if(date == null){
+                                                            const date = Date.create({createdAtDate: birthday}).then(()=>{
+                                                                console.log(date);
+                                                            })
+                                                        }
+                                                    })
                                                 })
-                                            }
-
 
                                             console.log(photo);
                                         } catch (e){
@@ -79,7 +81,7 @@ class PhotoController {
                                     else{
                                         console.log(exifData);
                                         var data = date.parse(exifData.exif.DateTimeOriginal, 'YYYY:MM:DD HH:mm:ss')
-                                        let birthday = `${date.format(data, 'DD/MM/YYYY')}`
+                                        let birthday = `${date.format(data, 'DD.MM.YYYY')}`
                                         console.log(birthday);
                                         try{
                                             sharp(path.resolve(config.path_to_images, fileName))
@@ -89,15 +91,17 @@ class PhotoController {
                                                     fit: "cover",
                                                     jpegOptions: { force:true, quality:90 }
                                                 }).toFile(`${path.resolve(config.path_to_thumbs, fileName)}`)
-                                            const photo = await Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
-                                            const date =  await Date.findOne({where:{createdAtDate : birthday}})
-                                            console.log(date)
-                                            if(date == null){
-                                                const date = await Date.create({createdAtDate: birthday}).then(()=>{
-                                                    console.log(date);
+                                                const photo = Photo.create({createdAtDate: birthday, createdById: authorId, hash, ext, name})
+                                                .then(()=>{
+                                                    const date =  Date.findOne({where:{createdAtDate : birthday}}).then((date, err)=>{
+                                                        console.log(date)
+                                                        if(date == null){
+                                                            const date = Date.create({createdAtDate: birthday}).then(()=>{
+                                                                console.log(date);
+                                                            })
+                                                        }
+                                                    })
                                                 })
-                                            }
-
 
                                             console.log(photo);
     
@@ -140,7 +144,7 @@ class PhotoController {
                             new ExifImage({ image : `${path.resolve(config.path_to_images, fileName)}` },async function (error, exifData) {
                                 if (error || !exifData.exif.DateTimeOriginal){
                                     let {birthtime} = fs.statSync(path.resolve(config.path_to_images, fileName));
-                                    let birthday = `${date.format(birthtime, 'DD/MM/YYYY')}`
+                                    let birthday = `${date.format(birthtime, 'DD.MM.YYYY')}`
                                     console.log(birthday); 
                                     try{
                                             sharp(path.resolve(config.path_to_images, fileName))
@@ -179,7 +183,7 @@ class PhotoController {
                                 else{
                                     console.log(exifData);
                                     var data = date.parse(exifData.exif.DateTimeOriginal, 'YYYY:MM:DD HH:mm:ss')
-                                    let birthday = `${date.format(data, 'DD/MM/YYYY')}`
+                                    let birthday = `${date.format(data, 'DD.MM.YYYY')}`
                                     console.log(birthday);
                                     try{                                    
                                         sharp(path.resolve(config.path_to_images, fileName))
@@ -241,14 +245,19 @@ class PhotoController {
         let {createdAt, limit, page} = req.query
         page = page || 1;
         limit = limit || 30;
-        let offset = page * limit - limit;
+        let offset =page * limit - limit;
         let photos;
         if (!createdAt) {
-            photos = await Photo.findAndCountAll({limit, offset})
+            photos = await Photo.findAndCountAll({order: [
+                ['id', 'DESC']
+            ],limit, offset})
         }
         if (createdAt) {
-            photos = await Photo.findAndCountAll({where: {createdAtDate: createdAt}, limit, offset})
+            photos = await Photo.findAndCountAll({where: {createdAtDate: createdAt}, order: [
+                ['id', 'DESC']
+            ], limit, offset})
         }
+        //photos.rows.reverse()
         return res.json(photos)
     }
 

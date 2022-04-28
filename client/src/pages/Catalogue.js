@@ -11,11 +11,12 @@ import {fetchPhotos} from "../http/photosAPI";
 import Pages from "../components/Pages";
 import jwt_decode from "jwt-decode";
 import smile from "../public/grust.png"
-
 const Catalogue = observer(() => {
     const {photo} = useContext(Context)
+    const {user} = useContext(Context)
     const decoded = jwt_decode(localStorage.token)
     useEffect(() => {
+        user.setUser(false)
         fetchPhotos(null, 1, photo.limit).then(data => {
             photo.setPhotos(data.rows)
             photo.setTotalCount(data.count)
