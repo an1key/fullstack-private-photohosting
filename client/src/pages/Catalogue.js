@@ -13,10 +13,8 @@ import jwt_decode from "jwt-decode";
 import smile from "../public/grust.png"
 const Catalogue = observer(() => {
     const {photo} = useContext(Context)
-    const {user} = useContext(Context)
     const decoded = jwt_decode(localStorage.token)
     useEffect(() => {
-        user.setUser(false)
         fetchPhotos(null, 1, photo.limit).then(data => {
             photo.setPhotos(data.rows)
             photo.setTotalCount(data.count)
@@ -51,10 +49,10 @@ const Catalogue = observer(() => {
             :
                 <Container className={'mt-3'}>
                     <Row>
-                        <Col xs={0} md={0} lg={2}>
+                        <Col xs={0} md={0} lg={3} xl={2}>
                             <DatesBar/>
                         </Col>
-                        <Col xs={12} md={12} lg={10}>
+                        <Col xs={12} md={12} lg={9} xl={10}>
                             <PhotoList/>
                             <Pages/>
                         </Col>

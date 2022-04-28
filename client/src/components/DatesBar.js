@@ -20,7 +20,7 @@ const DatesBar = observer(() => {
     return (
         <Container>
             <Alert className="d-flex ml-3" variant={'warning'} style={{width:'150px'}}>
-                Сгруппируйте фото по дате добавления:
+                Сгруппируйте фото по дате съёмки:
             </Alert>
             <Row className="d-flex ml-2">
 

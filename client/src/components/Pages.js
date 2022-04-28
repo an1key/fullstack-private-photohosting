@@ -14,9 +14,9 @@ const Pages = observer(() => {
         pages.push(i + 1)
     }
     const radios = [
-        { name: '5', value: '5' },
-        { name: '10', value: '10' },
         { name: '15', value: '15' },
+        { name: '30', value: '30' },
+        { name: '50', value: '50' },
       ];
     
 
